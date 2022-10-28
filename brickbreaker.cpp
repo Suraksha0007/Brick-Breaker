@@ -15,7 +15,7 @@
 #define MAXY 19
 
 using namespace std;
- 
+
 HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
 COORD CursorPosition;
 
@@ -26,8 +26,8 @@ int bricks[24][2] = {
 					};
 
 int visibleBricks[24] = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1};
-int sliderPos[2] = {18,22}; 
-int ballPos[2] = {17,26}; 
+int sliderPos[2] = {18,22};
+int ballPos[2] = {17,26};
 int startBall = 0;
 int dir = 1; // 1- TopRight, 2- TopLeft, 3- BottomLeft, 4-BottomRight
 int bricksLeft = 24;
@@ -47,7 +47,7 @@ void setcursor(bool visible, DWORD size) // set bool visible = 0 - invisible, bo
 	{
 		size = 20;	// default cursor size Changing to numbers from 1 to 20, decreases cursor width
 	}
-	CONSOLE_CURSOR_INFO lpCursor;	
+	CONSOLE_CURSOR_INFO lpCursor;
 	lpCursor.bVisible = visible;
 	lpCursor.dwSize = size;
 	SetConsoleCursorInfo(console,&lpCursor);
@@ -56,7 +56,7 @@ void setcursor(bool visible, DWORD size) // set bool visible = 0 - invisible, bo
 void drawBorder(){
 	gotoxy(0,0);cout<<"----------------------------------------------------";
 	gotoxy(0,SCREEN_HEIGHT);cout<<"----------------------------------------------------";
-	
+
 	for(int i=0; i<SCREEN_HEIGHT; i++){
 		gotoxy(0,i); cout<<"|";
 		gotoxy(SCREEN_WIDTH,i); cout<<"|";
@@ -65,9 +65,9 @@ void drawBorder(){
 
 void drawBricks(){
 	for( int i=0; i<24; i++){
-		if( visibleBricks[i] == 1 ){ 
+		if( visibleBricks[i] == 1 ){
 			gotoxy(bricks[i][1], bricks[i][0]);
-			cout<<"±±±±"; 
+			cout<<"Â±Â±Â±Â±";
 		}
 	}
 }
@@ -75,7 +75,7 @@ void drawBricks(){
 void ballHitSlider(){
 	if( ballPos[1]>=sliderPos[1] && ballPos[1]<=sliderPos[1]+8){
 		if( ballPos[0] == sliderPos[0]-1 ){
-			if( dir == 3 ) 
+			if( dir == 3 )
 				dir = 2;
 			else if( dir == 4 )
 				dir = 1;
@@ -103,68 +103,68 @@ void play(){
 		drawBorder();
 
 		gotoxy(sliderPos[1],sliderPos[0]);
-		cout<<"±±±±±±±±±";
+		cout<<"Â±Â±Â±Â±Â±Â±Â±Â±Â±";
 
 		gotoxy(ballPos[1],ballPos[0]);
 		cout<<"0";
- 
+
 		if(kbhit()){
 			char ch = getch();
 			if( ch=='d'||ch=='D'|| ch==77 ){
 				if(sliderPos[1] < 44)
 					sliderPos[1] = sliderPos[1]+2;
-			} 
+			}
 			if( ch=='a'||ch=='A'|| ch==75 ){
 				if(sliderPos[1] > 2)
 					sliderPos[1] = sliderPos[1]-2;
-			} 
+			}
 			if(ch==32){
 				startBall = 1;
-			} 
+			}
 			if(ch==27){
 				break;
 			}
 		}
-		
+
 		if( startBall == 1 ){
 			if( dir == 1) { // TOP RIGHT
 				ballPos[0] = ballPos[0] - 1;
 				ballPos[1] = ballPos[1] + 2;
 				if( ballPos[1] > MAXX ){
 					dir = 2;
-				}  
+				}
 				else if( ballPos[0] < MINY ){
 					dir = 4;
-				}   
+				}
 			}
 			else if( dir == 2) { // TOP LEFT
 				ballPos[0] = ballPos[0] - 1;
 				ballPos[1] = ballPos[1] - 2;
 				if( ballPos[0] < MINY ){
 					dir = 3;
-				}  
+				}
 				else if( ballPos[1] < MINX  ){
 					dir = 1;
-				}   
+				}
 			}
 			else if( dir == 3) { // BOTTOM LEFT
 				ballPos[0] = ballPos[0] + 1;
 				ballPos[1] = ballPos[1] - 2;
-			  
+
 				if( ballPos[0] > MAXY ){
 					lose = 1;
 					break;
-				}  
+				}
 				else if( ballPos[1] < MINX  ){
 					dir = 4;
-				}    
+				}
 			}
 			else if( dir == 4) { // BOTTOM RIGHT
 				ballPos[0] = ballPos[0] + 1;
-				ballPos[1] = ballPos[1] + 2;  
+				ballPos[1] = ballPos[1] + 2;
 				if( ballPos[1] > MAXX ){
 					dir = 3;
-				} 
+				}
 				else if( ballPos[0] > MAXY ){
 					lose = 1;
 					break;
@@ -173,41 +173,41 @@ void play(){
 
 			ballHitSlider();
 		}
-		
+
 		ballHitBrick();
-	
+
 		if( bricksLeft == 0){
-			win = 1;	
+			win = 1;
 			break;
-		}		
+		}
 
 		Sleep(30);
 	}
-	
+
 	if( lose == 1){
 		system("cls");
-		
-		gotoxy(10,5); cout<<" --------------------- "; 
-		gotoxy(10,6); cout<<" |     YOU LOSE      | "; 
-		gotoxy(10,7); cout<<" --------------------- "; 			
 
-		gotoxy(10,9); cout<<"Press any key to go back to Menu."; 	
-		getch(); 
+		gotoxy(10,5); cout<<" --------------------- ";
+		gotoxy(10,6); cout<<" |     YOU LOSE      | ";
+		gotoxy(10,7); cout<<" --------------------- ";
+
+		gotoxy(10,9); cout<<"Press any key to go back to Menu.";
+		getch();
 	}
 
 	if( win == 1){
 		system("cls");
-		gotoxy(10,5); cout<<" --------------------- "; 
-		gotoxy(10,6); cout<<" |     YOU WIN       | "; 
-		gotoxy(10,7); cout<<" --------------------- "; 			
+		gotoxy(10,5); cout<<" --------------------- ";
+		gotoxy(10,6); cout<<" |     YOU WIN       | ";
+		gotoxy(10,7); cout<<" --------------------- ";
 
 		gotoxy(10,9); cout<<"Press any key to go back to Menu.";
-		getch(); 	  			 
+		getch();
 	}
 }
 
 void instructions(){
-	
+
 	system("cls");
 	cout<<"Instructions";
 	cout<<"\n----------------";
@@ -220,27 +220,28 @@ void instructions(){
 
 int main()
 {
-	setcursor(0,0);  
-	
+	setcursor(0,0);
+
 	do{
 		system("cls");
-		gotoxy(10,5); cout<<" -------------------------- "; 
-		gotoxy(10,6); cout<<" |     BRICK BREAKER      | "; 
+		gotoxy(10,5); cout<<" -------------------------- ";
+		gotoxy(10,6); cout<<" |     BRICK BREAKER      | ";
 		gotoxy(10,7); cout<<" --------------------------";
 		gotoxy(10,9); cout<<"1. Start Game";
-		gotoxy(10,10); cout<<"2. Instructions";	 
+		gotoxy(10,10); cout<<"2. Instructions";
 		gotoxy(10,11); cout<<"3. Quit";
 		gotoxy(10,13); cout<<"Select option: ";
 		char op = getche();
-		
+
 		if( op=='1') play();
 		else if( op=='2') instructions();
 		else if( op=='3') exit(0);
-		
+
 	}while(1);
 
 	play();
 
-	cout<<endl<<endl;	
+	cout<<endl<<endl;
 	return 0;
 }
+
